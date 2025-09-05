@@ -1,4 +1,5 @@
 import { NextRequest } from "next/server";
+export const runtime = "nodejs";
 
 export async function GET(req: NextRequest) {
     const { searchParams } = new URL(req.url);
@@ -11,7 +12,16 @@ export async function GET(req: NextRequest) {
             `https://api.binance.com/api/v3/klines?symbol=${symbol}&interval=${interval}&limit=${limit}`
         );
         if (!res.ok) {
-            return new Response("Failed to fetch history", { status: 500 });
+            const text = await res.text();
+            return new Response(
+                JSON.stringify({
+                    error: "Failed to fetch history",
+                    status: res.status,
+                    statusText: res.statusText,
+                    body: text,
+                }),
+                { status: 500, headers: { "Content-Type": "application/json" } }
+            );
         }
         const data = await res.json();
 
