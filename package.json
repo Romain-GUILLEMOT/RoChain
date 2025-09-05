@@ -1,6 +1,6 @@
 {
-  "name": "untitled7",
-  "version": "0.1.0",
+  "name": "rochain",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
@@ -10,9 +10,11 @@
     "format": "biome format --write"
   },
   "dependencies": {
+    "@types/ws": "^8.18.1",
+    "next": "15.5.2",
     "react": "19.1.0",
     "react-dom": "19.1.0",
-    "next": "15.5.2"
+    "ws": "^8.18.3"
   },
   "devDependencies": {
     "typescript": "^5",

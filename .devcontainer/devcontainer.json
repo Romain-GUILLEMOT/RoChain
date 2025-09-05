@@ -11,10 +11,7 @@
   "features": {},
 
   // Use 'forwardPorts' to make a list of ports inside the container available locally.
-  "forwardPorts": ["3000"],
-  "remoteEnv": {
-    "NEXT_PUBLIC_API_URL": "http://localhost:8000"
-  },
+  "forwardPorts": [3000],
 
 
   // Configure tool-specific properties.
