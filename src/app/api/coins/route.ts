@@ -1,9 +1,11 @@
 export async function GET() {
-    const res = await fetch("https://api.coingecko.com/api/v3/coins/list");
-    if (!res.ok) {
-        return new Response("Failed to fetch coin list", { status: 500 });
-    }
-
-    const data = await res.json();
-    return Response.json(data);
+    const coins = [
+        { id: "btcusdt", symbol: "BTC", name: "Bitcoin", color: "#f7931a", icon: "₿" },
+        { id: "ethusdt", symbol: "ETH", name: "Ethereum", color: "#627eea", icon: "Ξ" },
+        { id: "solusdt", symbol: "SOL", name: "Solana", color: "#14f195", icon: "◎" },
+        { id: "dogeusdt", symbol: "DOGE", name: "Dogecoin", color: "#c2a633", icon: "Ð" },
+        { id: "adausdt", symbol: "ADA", name: "Cardano", color: "#0033ad", icon: "₳" },
+        { id: "xrpusdt", symbol: "XRP", name: "XRP", color: "#23292f", icon: "✕" },
+    ];
+    return Response.json(coins);
 }

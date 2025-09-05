@@ -1,35 +1,43 @@
-export async function GET() {
+export async function GET(req: Request) {
+    const { searchParams } = new URL(req.url);
+    const symbols = (searchParams.get("symbols") || "btcusdt").toLowerCase().split(",");
+
     const encoder = new TextEncoder();
 
     const stream = new ReadableStream({
-        start(controller) {
-            const send = async () => {
+        async start(controller) {
+            const { WebSocket } = await import("ws");
+
+            // ex: wss://stream.binance.com:9443/stream?streams=btcusdt@trade/ethusdt@trade
+            const streams = symbols.map((s) => `${s}@trade`).join("/");
+            const url = `wss://stream.binance.com:9443/stream?streams=${streams}`;
+
+            const ws = new WebSocket(url);
+
+            ws.on("message", (msg) => {
                 try {
-                    const res = await fetch(
-                        "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum&vs_currencies=usd"
-                    );
-                    const data = await res.json();
-
-                    controller.enqueue(
-                        encoder.encode(`data: ${JSON.stringify(data)}\n\n`)
-                    );
+                    const data = JSON.parse(msg.toString());
+                    const trade = data.data;
+                    const price = parseFloat(trade.p);
+                    const payload = { symbol: trade.s, price, time: trade.T };
+                    controller.enqueue(encoder.encode(`data: ${JSON.stringify(payload)}\n\n`));
                 } catch {
-                    controller.enqueue(encoder.encode("event: error\ndata: fetch failed\n\n"));
+                    // ignore parsing errors
                 }
-            };
+            });
 
-            // Premier envoi immédiat
-            send();
-            const interval = setInterval(send, 5000);
+            ws.on("close", () => {
+                controller.close();
+            });
 
-            // Nettoyage quand le client ferme la connexion
-            stream.cancel = () => {
-                clearInterval(interval);
-                try {
-                    controller.close();
-                } catch {
-                    // ignore si déjà fermé
-                }
+            ws.on("error", () => {
+                controller.enqueue(encoder.encode("event: error\ndata: ws error\n\n"));
+                controller.close();
+            });
+
+            // cleanup
+            return () => {
+                ws.close();
             };
         },
     });
