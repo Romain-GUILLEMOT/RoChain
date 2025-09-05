@@ -37,11 +37,19 @@ interface StreamMsg {
 
 // Fond animé avec bulles
 const AnimatedBackground = ({ selectedCoins, coins }: { selectedCoins: string[], coins: Coin[] }) => {
+    const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
+
+    useEffect(() => {
+        if (typeof window !== "undefined") {
+            setDimensions({ width: window.innerWidth, height: window.innerHeight });
+        }
+    }, []);
+
     const bubbles = Array.from({ length: 15 }, (_, i) => i);
 
     return (
         <div className="fixed inset-0 overflow-hidden z-0">
-            {bubbles.map((bubble) => {
+            {dimensions.width > 0 && bubbles.map((bubble) => {
                 const colors = selectedCoins.length > 0
                     ? selectedCoins.map(id => coins.find(c => c.id === id)?.color || '#3b82f6')
                     : ['#3b82f6', '#06b6d4', '#10b981'];
@@ -62,14 +70,14 @@ const AnimatedBackground = ({ selectedCoins, coins }: { selectedCoins: string[],
                         }}
                         animate={{
                             x: [
-                                Math.random() * window.innerWidth,
-                                Math.random() * window.innerWidth,
-                                Math.random() * window.innerWidth
+                                Math.random() * dimensions.width,
+                                Math.random() * dimensions.width,
+                                Math.random() * dimensions.width
                             ],
                             y: [
-                                Math.random() * window.innerHeight,
-                                Math.random() * window.innerHeight,
-                                Math.random() * window.innerHeight
+                                Math.random() * dimensions.height,
+                                Math.random() * dimensions.height,
+                                Math.random() * dimensions.height
                             ],
                             scale: [0.5, 1.2, 0.5],
                         }}
@@ -85,6 +93,7 @@ const AnimatedBackground = ({ selectedCoins, coins }: { selectedCoins: string[],
         </div>
     );
 };
+
 
 export default function HomePage() {
     const [coins, setCoins] = useState<Coin[]>([]);
@@ -215,7 +224,7 @@ export default function HomePage() {
                         color: '#ffffff',
                         font: {
                             size: 14,
-                            weight: 'bold'
+                            weight: 700
                         },
                         usePointStyle: true,
                         pointStyle: 'circle'
@@ -227,7 +236,7 @@ export default function HomePage() {
                     color: '#ffffff',
                     font: {
                         size: 18,
-                        weight: 'bold'
+                        weight: 700
                     },
                     padding: {
                         bottom: 20
@@ -268,7 +277,7 @@ export default function HomePage() {
                         color: '#cbd5e1',
                         font: {
                             size: 14,
-                            weight: 'bold'
+                            weight: 700
                         }
                     },
                     grid: {
@@ -290,7 +299,7 @@ export default function HomePage() {
                         color: '#cbd5e1',
                         font: {
                             size: 14,
-                            weight: 'bold'
+                            weight: 700
                         }
                     },
                     grid: {
