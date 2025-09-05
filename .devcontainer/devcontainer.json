@@ -1,0 +1,42 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/typescript-node
+{
+  "name": "Node.js & TypeScript",
+  // Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:22",
+  "remoteEnv": {
+    "SSH_AUTH_SOCK": "${env:SSH_AUTH_SOCK}",
+  },
+  // Features to add to the dev container. More info: https://containers.dev/features.
+  "features": {},
+
+  // Use 'forwardPorts' to make a list of ports inside the container available locally.
+  "forwardPorts": ["3000"],
+  "remoteEnv": {
+    "NEXT_PUBLIC_API_URL": "http://localhost:8000"
+  },
+
+
+  // Configure tool-specific properties.
+  "customizations" : {
+    "vscode": {
+      "extensions": [
+        "github.copilot",
+        "dsznajder.es7-react-js-snippets",
+        "firsttris.vscode-jest-runner",
+        "formulahendry.auto-rename-tag",
+        "ms-vscode.vscode-typescript-next"
+      ]
+    },
+    "jetbrains" : {
+      "backend" : "WebStorm",
+      "plugins": [
+        "com.github.copilot",
+        "com.github.biomejs.intellijbiome"
+      ]
+    }
+  },
+
+  // Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
+  // "remoteUser": "root"
+}
